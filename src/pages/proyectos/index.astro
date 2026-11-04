@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectsExplorer from '../../components/ProjectsExplorer.tsx';
+import type { ProjectItem } from '../../components/ProjectsExplorer.tsx';
+
+const projects = await getCollection('projects');
+
+const items: ProjectItem[] = await Promise.all(
+  projects
+    .sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order)
+    .map(async (project) => {
+      const cover = await getImage({
+        src: project.data.cover,
+        width: 960,
+        format: 'webp',
+      });
+
+      return {
+        id: project.id,
+        title: project.data.title,
+        summary: project.data.summary,
+        year: project.data.year,
+        role: project.data.role,
+        context: project.data.context,
+        stack: [...project.data.stack],
+        cover: cover.src,
+        demo: project.data.demo,
+        repo: project.data.repo,
+      };
+    }),
+);
+---
+
+<BaseLayout
+  title="Proyectos"
+  description="Todos los proyectos de Sergi Pérez Marí: aplicaciones full stack, frontend y herramientas. Con stack, contexto, código y demos."
+>
+  <section class="section" style="border-top:0">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Archivo</p>
+          <h2 class="section-title">Todos los proyectos</h2>
+        </div>
+        <p class="section-note">
+          Filtra por contexto o busca por tecnología. Cada proyecto tiene su ficha
+          con el detalle técnico.
+        </p>
+      </div>
+
+      <ProjectsExplorer client:load projects={items} />
+    </div>
+  </section>
+</BaseLayout>

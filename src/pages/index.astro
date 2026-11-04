@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Experience from '../components/Experience.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+
+const projects = await getCollection('projects');
+const featured = projects
+  .filter((project) => project.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <Hero />
+
+  <section id="proyectos" class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Trabajo seleccionado</p>
+          <h2 class="section-title">Proyectos</h2>
+        </div>
+        <p class="section-note">
+          Una muestra de lo que he construido. Cada ficha cuenta el problema, las
+          decisiones técnicas y el resultado, no solo una captura.
+        </p>
+      </div>
+
+      <div class="project-grid project-grid--featured">
+        {featured.map((project, index) => (
+          <ProjectCard project={project} wide={index === 0} />
+        ))}
+      </div>
+
+      <div class="cv-actions" style="margin-top:3rem">
+        <a class="btn btn-ghost" href="/proyectos">
+          Ver los {projects.length} proyectos
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Experience />
+  <About />
+  <Contact />
+</BaseLayout>

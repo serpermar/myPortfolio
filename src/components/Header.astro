@@ -1,0 +1,77 @@
+---
+import { site } from '../data/site';
+
+const links = [
+  { href: '/#proyectos', label: 'Proyectos' },
+  { href: '/#experiencia', label: 'Experiencia' },
+  { href: '/#sobre-mi', label: 'Sobre mí' },
+  { href: '/#contacto', label: 'Contacto' },
+];
+---
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/" aria-label={`${site.name}, inicio`}>
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span>{site.name}</span>
+      <span class="brand-subtitle mono" style="margin-left:.4rem">/ {site.role}</span>
+    </a>
+
+    <div class="header-right">
+      <nav aria-label="Navegación principal">
+        <ul class="nav-list">
+          {links.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <button
+        class="theme-toggle"
+        type="button"
+        data-theme-toggle
+        aria-label="Cambiar entre modo claro y oscuro"
+      >
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+        </svg>
+      </button>
+
+      <a class="btn btn-ghost btn-sm header-cta" href="/cv">CV</a>
+
+      <details class="menu">
+        <summary aria-label="Abrir menú">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </summary>
+        <ul class="menu-panel">
+          {links.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+          <li><a href="/proyectos">Todos los proyectos</a></li>
+          <li><a href="/cv">Currículum</a></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  (() => {
+    const button = document.querySelector('[data-theme-toggle]');
+    if (!button) return;
+    button.addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+    });
+  })();
+</script>

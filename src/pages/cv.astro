@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="Currículum"
+  description={`Currículum de ${site.name}, ${site.role.toLowerCase()} en ${site.location}. Experiencia, formación y stack técnico.`}
+>
+  <div class="cv container">
+    <header class="cv-head">
+      <div>
+        <h1 class="cv-name">{site.name}</h1>
+        <p class="cv-role">{site.role} · {site.location}</p>
+      </div>
+      <div class="cv-contact">
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href={site.github} target="_blank" rel="noopener">github.com/serpermar</a>
+        <a href={site.linkedin} target="_blank" rel="noopener">linkedin.com/in/sergi-pérez-marí</a>
+      </div>
+    </header>
+
+    <div class="cv-actions">
+      <a class="btn btn-primary btn-sm" href={site.cvPdf} download>Descargar PDF</a>
+      <a class="btn btn-ghost btn-sm" href="/proyectos">Ver proyectos</a>
+      <button class="btn btn-ghost btn-sm" type="button" data-print>Imprimir / guardar</button>
+    </div>
+
+    <div class="cv-grid">
+      <div>
+        <section class="cv-block">
+          <h2>Perfil</h2>
+          <p style="color:var(--fg-muted);font-size:.925rem;margin:0">
+            Desarrollador full stack con formación en DAM y DAW y experiencia en el
+            desarrollo de aplicaciones web y APIs. He trabajado con React, .NET Core y
+            SQL participando en proyectos de principio a fin: desde la interfaz hasta
+            el despliegue con Docker sobre Linux.
+          </p>
+        </section>
+
+        <section class="cv-block">
+          <h2>Stack</h2>
+          <dl class="cv-skills">
+            {site.stack.map((group) => (
+              <div>
+                <dt>{group.label}</dt>
+                <dd>{group.items.join(' · ')}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section class="cv-block">
+          <h2>Idiomas</h2>
+          <dl class="cv-skills">
+            {site.languages.map((language) => (
+              <div>
+                <dt>{language.name}</dt>
+                <dd>{language.level}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </div>
+
+      <div>
+        <section class="cv-block">
+          <h2>Experiencia</h2>
+          <article class="cv-item">
+            <h3>{site.period.title}</h3>
+            <p class="cv-meta">{site.period.from} — {site.period.to}</p>
+            <p>{site.period.summary}</p>
+          </article>
+          {site.experience.map((job) => (
+            <article class="cv-item">
+              <h3>{job.role} · {job.company}</h3>
+              <p class="cv-meta">{job.from} — {job.to} · {job.location}</p>
+              {job.bullets.length > 0 ? (
+                <ul class="cv-bullets">
+                  {job.bullets.map((bullet) => (
+                    <li>{bullet}</li>
+                  ))}
+                </ul>
+              ) : (
+                job.summary && <p>{job.summary}</p>
+              )}
+            </article>
+          ))}
+        </section>
+
+        <section class="cv-block">
+          <h2>Formación</h2>
+          {site.education.map((item) => (
+            <article class="cv-item">
+              <h3>{item.title}</h3>
+              <p class="cv-meta">{item.center} · {item.from} — {item.to}</p>
+            </article>
+          ))}
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>

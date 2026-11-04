@@ -1,0 +1,103 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { title, summary, year, role, context, stack, repo, demo, cover } = project.data;
+
+const projects = await getCollection('projects');
+const ordered = projects.sort((a, b) => a.data.order - b.data.order);
+const index = ordered.findIndex((entry) => entry.id === project.id);
+const prev = index > 0 ? ordered[index - 1] : null;
+const next = index < ordered.length - 1 ? ordered[index + 1] : null;
+
+const rawBody = (project.body ?? '').replace(/<!--[\s\S]*?-->/g, '').trim();
+const hasCaseStudy = rawBody.length > 40;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={title} description={summary}>
+  <article>
+    <header class="detail-hero">
+      <div class="container">
+        <a class="back-link" href="/proyectos">← Todos los proyectos</a>
+
+        <p class="eyebrow">{context} · {year}</p>
+        <h1 class="detail-title">{title}</h1>
+        <p class="detail-summary">{summary}</p>
+
+        <dl class="detail-meta">
+          <div>
+            <dt>Rol</dt>
+            <dd>{role}</dd>
+          </div>
+          <div>
+            <dt>Año</dt>
+            <dd>{year}</dd>
+          </div>
+          <div>
+            <dt>Stack</dt>
+            <dd>{stack.join(' · ')}</dd>
+          </div>
+          {demo && (
+            <div>
+              <dt>Demo</dt>
+              <dd><a class="link-arrow" href={demo} target="_blank" rel="noopener">Abrir ↗</a></dd>
+            </div>
+          )}
+          {repo && (
+            <div>
+              <dt>Código</dt>
+              <dd><a class="link-arrow" href={repo} target="_blank" rel="noopener">GitHub ↗</a></dd>
+            </div>
+          )}
+        </dl>
+
+        <div class="detail-cover">
+          <Image
+            src={cover}
+            alt={`Captura de ${title}`}
+            widths={[720, 1280]}
+            sizes="(max-width: 1120px) 100vw, 1120px"
+            format="webp"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </header>
+
+    {hasCaseStudy && (
+      <div class="container">
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    )}
+
+    <div class="container">
+      <nav class="pager" aria-label="Otros proyectos">
+        <div>
+          {prev && (
+            <a class="link-arrow" href={`/proyectos/${prev.id}`}>← {prev.data.title}</a>
+          )}
+        </div>
+        <div>
+          {next && (
+            <a class="link-arrow" href={`/proyectos/${next.id}`}>{next.data.title} →</a>
+          )}
+        </div>
+      </nav>
+    </div>
+  </article>
+</BaseLayout>

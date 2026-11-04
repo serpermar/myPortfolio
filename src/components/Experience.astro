@@ -1,0 +1,41 @@
+---
+import { site } from '../data/site';
+---
+
+<section id="experiencia" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Trayectoria</p>
+        <h2 class="section-title">Dónde he trabajado</h2>
+      </div>
+      <p class="section-note">
+        Cuatro etapas, del soporte técnico al desarrollo full stack. Ahora, formación
+        continua y proyectos propios mientras busco el siguiente equipo.
+      </p>
+    </div>
+
+    <ul class="exp-list">
+      <li class="exp-row">
+        <span class="exp-date">{site.period.from} — {site.period.to}</span>
+        <div>
+          <h3 class="exp-role">{site.period.title}</h3>
+          <p class="exp-company">Búsqueda activa · Disponibilidad inmediata</p>
+          <p class="exp-summary">{site.period.summary}</p>
+        </div>
+      </li>
+      {site.experience.map((job) => (
+        <li class="exp-row">
+          <span class="exp-date">{job.from} — {job.to}</span>
+          <div>
+            <h3 class="exp-role">{job.role}</h3>
+            <p class="exp-company">
+              {job.company} <span style="color:var(--fg-faint)">· {job.location}</span>
+            </p>
+            {job.summary && <p class="exp-summary">{job.summary}</p>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

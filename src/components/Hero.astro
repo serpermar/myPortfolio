@@ -1,0 +1,60 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="hero container">
+  <div class="hero-copy">
+    <p class="eyebrow">{site.name} · {site.location}</p>
+
+    <h1>
+      Desarrollador{' '}
+      <span class="serif">full stack</span>
+    </h1>
+
+    <p class="hero-lead">{site.intro}</p>
+
+    {site.available && (
+      <p class="status">
+        <span class="status-dot" aria-hidden="true"></span>
+        {site.availabilityNote}
+      </p>
+    )}
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#proyectos">
+        Ver proyectos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6"></path>
+        </svg>
+      </a>
+      <a class="btn btn-ghost" href={site.cvPdf} download>
+        Descargar CV
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path>
+        </svg>
+      </a>
+      <a class="link-arrow" href={site.github} target="_blank" rel="noopener">
+        GitHub ↗
+      </a>
+    </div>
+  </div>
+
+  <aside class="stack-panel" aria-label="Stack técnico">
+    <div class="stack-panel-head">
+      <span class="mono">Stack</span>
+      <span class="mono" style="color:var(--fg-faint)">2026</span>
+    </div>
+    <dl style="margin:0">
+      {site.stack.map((group) => (
+        <div class="stack-row">
+          <dt>{group.label}</dt>
+          <dd>
+            {group.items.map((item) => (
+              <span>{item}</span>
+            ))}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </aside>
+</section>

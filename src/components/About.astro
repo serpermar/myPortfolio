@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import sergi from '../assets/sergi.jpg';
+import { site } from '../data/site';
+---
+
+<section id="sobre-mi" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Sobre mí</p>
+        <h2 class="section-title">Quién está detrás</h2>
+      </div>
+    </div>
+
+    <div class="about">
+      <div class="about-photo">
+        <Image
+          src={sergi}
+          alt={`Retrato de ${site.name}`}
+          widths={[320, 480]}
+          sizes="(max-width: 960px) 320px, 360px"
+          loading="lazy"
+        />
+      </div>
+
+      <div class="about-body">
+        {site.about.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+
+        <p class="about-subhead">Idiomas</p>
+        <ul class="tags">
+          {site.languages.map((language) => (
+            <li>{language.name} · {language.level}</li>
+          ))}
+        </ul>
+
+        <p class="about-subhead">Fuera del código</p>
+        <ul class="tags">
+          {site.interests.map((interest) => (
+            <li>{interest}</li>
+          ))}
+        </ul>
+
+        <div class="cv-actions">
+          <a class="btn btn-ghost btn-sm" href="/cv">Ver currículum completo</a>
+          <a class="link-arrow" href={site.linkedin} target="_blank" rel="noopener">
+            LinkedIn ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

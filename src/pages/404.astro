@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Página no encontrada" noindex>
+  <section class="section" style="border-top:0">
+    <div class="container" style="padding-block:4rem">
+      <p class="eyebrow">Error 404</p>
+      <h1 class="section-title" style="font-size:clamp(2.5rem,7vw,4.5rem)">
+        Esta página no existe.
+      </h1>
+      <p class="hero-lead" style="margin-top:1.5rem">
+        Puede que el enlace esté mal o que el proyecto haya cambiado de sitio.
+      </p>
+      <div class="cv-actions">
+        <a class="btn btn-primary" href="/">Volver al inicio</a>
+        <a class="btn btn-ghost" href="/proyectos">Ver proyectos</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
