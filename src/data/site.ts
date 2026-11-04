@@ -17,7 +17,13 @@ export const site = {
   cvPdf: '/Sergi-Perez-Mari-CV.pdf',
   available: true,
   availabilityNote: 'Abierto a oportunidades',
-
+  period: {
+    from: 'Oct 2025',
+    to: 'Actualidad',
+    title: 'Búsqueda activa',
+    summary:
+      'Formación continua y proyectos propios mientras busco el siguiente equipo donde seguir creciendo.',
+  },
   /** Deja esto vacío para ocultar el formulario y dejar solo el email directo. */
   web3formsKey: '',
 
@@ -99,28 +105,46 @@ export const site = {
 
   education: [
     {
-      from: '2024',
-      to: '2024',
-      title: 'Desarrollo de Aplicaciones Móviles (487 h)',
-      center: 'Instituto Tecnológico de Barcelona',
-    },
-    {
-      from: '2022',
-      to: '2023',
+      from: 'Sep 2022',
+      to: 'Jul 2023',
       title: 'Grado Superior en Desarrollo de Aplicaciones Web (DAW)',
-      center: 'Monlau Centre d’Estudis, Barcelona',
+      center: 'Monlau Centre d’Estudis',
+      location: 'Barcelona',
     },
     {
-      from: '2020',
-      to: '2022',
+      from: 'Sep 2020',
+      to: 'Jul 2022',
       title: 'Grado Superior en Desarrollo de Aplicaciones Multiplataforma (DAM)',
-      center: 'Monlau Centre d’Estudis, Barcelona',
+      center: 'Monlau Centre d’Estudis',
+      location: 'Barcelona',
     },
     {
-      from: '2018',
-      to: '2020',
+      from: 'Sep 2018',
+      to: 'Jun 2020',
       title: 'Grado Medio en Sistemas Microinformáticos y Redes (SMR)',
-      center: 'Monlau Centre d’Estudis, Barcelona',
+      center: 'Monlau Centre d’Estudis',
+      location: 'Barcelona',
+    },
+  ],
+
+  /** Formación complementaria y en curso. */
+  continuous: [
+    {
+      from: 'Sep 2026',
+      to: 'Dic 2026',
+      title: 'Fullstack Developer con JavaScript',
+      center: 'CIFO La Violeta',
+      location: 'Barcelona',
+      current: true,
+    },
+    {
+      from: 'Mar 2024',
+      to: 'Jul 2024',
+      title: 'Desarrollo de Aplicaciones Móviles',
+      center: 'Instituto Tecnológico de Barcelona',
+      location: 'Barcelona',
+      hours: 487,
+      current: false,
     },
   ],
 

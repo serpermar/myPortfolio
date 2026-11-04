@@ -1,0 +1,95 @@
+---
+import { site } from '../data/site';
+---
+
+<section id="formacion" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Formación</p>
+        <h2 class="section-title">Formación reglada y continua</h2>
+      </div>
+      <p class="section-note">
+        Tres titulaciones oficiales en desarrollo de software y formación complementaria
+        continua, del desarrollo móvil al full stack con JavaScript.
+      </p>
+    </div>
+
+    {site.continuous?.length > 0 && (
+      <div class="edu-group">
+        <h3 class="edu-group-title">Formación continua</h3>
+        <ul class="exp-list">
+          {site.continuous.map((item) => (
+            <li class="exp-row">
+              <span class="exp-date">
+                {item.from} — {item.to}
+                {item.current && <span class="badge-current">En curso</span>}
+              </span>
+              <div>
+                <h3 class="exp-role">
+                  {item.title}
+                  {item.hours && <span class="edu-hours"> · {item.hours} h</span>}
+                </h3>
+                <p class="exp-company">
+                  {item.center}{' '}
+                  <span style="color:var(--fg-faint)">· {item.location}</span>
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <div class="edu-group">
+      <h3 class="edu-group-title">Formación reglada</h3>
+      <ul class="exp-list">
+        {site.education.map((item) => (
+          <li class="exp-row">
+            <span class="exp-date">
+              {item.from === item.to ? item.from : `${item.from} — ${item.to}`}
+            </span>
+            <div>
+              <h3 class="exp-role">{item.title}</h3>
+              <p class="exp-company">
+                {item.center}{' '}
+                <span style="color:var(--fg-faint)">· {item.location}</span>
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .edu-group + .edu-group {
+    margin-top: 2.5rem;
+  }
+  .edu-group-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-faint);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  .edu-hours {
+    color: var(--fg-faint);
+    font-weight: 400;
+  }
+  .badge-current {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent, currentColor);
+    color: var(--accent, currentColor);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+</style>
