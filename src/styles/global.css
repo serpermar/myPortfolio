@@ -10,6 +10,17 @@
   font-display: swap;
 }
 
+/*
+ * Star Jedi viene con dos juegos de letras:
+ *  - MAYÚSCULAS: el dibujo "de logo", con bearings negativos. La K, R, N y Q
+ *    invaden hasta 0,2 em la letra siguiente y se montan unas sobre otras.
+ *  - minúsculas: el mismo alfabeto, con las formas limpias y a altura de
+ *    mayúscula (x-height = cap-height = 1444/2048).
+ * Por eso todo lo que usa --font-display lleva `text-transform: lowercase`:
+ * se pinta el juego limpio, pero se sigue leyendo como mayúsculas. No quites
+ * ese transform ni añadas `text-transform: uppercase`.
+ */
+
 /* ==========================================================================
    Tokens
    ========================================================================== */
@@ -121,7 +132,10 @@ h4 {
   font-weight: 400;
   line-height: 1.15;
   text-wrap: balance;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  /* Star Jedi: las minúsculas son el mismo alfabeto sin el desbordamiento de
+     las mayúsculas. Ver nota en @font-face. */
+  text-transform: lowercase;
 }
 
 p {
@@ -169,8 +183,9 @@ p {
   font-family: var(--font-display);
   font-style: normal;
   font-weight: 400;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
   color: var(--accent);
+  text-transform: lowercase;
 }
 
 .mono {
@@ -240,8 +255,9 @@ p {
   font-family: var(--font-display);
   font-size: 0.82rem;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-decoration: none;
+  text-transform: lowercase;
   white-space: nowrap;
   min-width: 0;
   overflow: hidden;
@@ -252,6 +268,7 @@ p {
   font-family: var(--font-mono);
   font-weight: 400;
   letter-spacing: 0.06em;
+  text-transform: none;
 }
 
 .brand-dot {
@@ -280,7 +297,8 @@ p {
   font-family: var(--font-display);
   font-size: 0.82rem;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
   color: var(--fg-muted);
   text-decoration: none;
   transition: color var(--transition);
@@ -366,7 +384,8 @@ p {
   font-family: var(--font-display);
   font-size: 0.85rem;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
   color: var(--fg-muted);
   text-decoration: none;
 }
@@ -390,7 +409,8 @@ p {
   font-family: var(--font-display);
   font-size: 0.85rem;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
   text-decoration: none;
   cursor: pointer;
   transition: transform var(--transition), background-color var(--transition),
@@ -439,7 +459,8 @@ p {
   font-family: var(--font-display);
   font-size: 0.8rem;
   font-weight: 400;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
   color: var(--fg);
   text-decoration: none;
   border-bottom: 1px solid var(--line-strong);
