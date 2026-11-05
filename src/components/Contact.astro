@@ -1,132 +1,139 @@
 ---
 import { site } from '../data/site';
-
-const hasForm = Boolean(site.web3formsKey);
 ---
 
 <section id="contacto" class="section">
   <div class="container">
-    <div class="contact-grid">
+    <div class="section-head">
       <div>
         <p class="eyebrow">Contacto</p>
-        <h2 class="contact-title">
-          ¿Hablamos?{' '}
-          <span class="serif" style="display:block">Tengo hueco.</span>
-        </h2>
-        <p class="contact-lead">
-          Si buscas a alguien para un equipo, tienes un proyecto en mente o
-          simplemente quieres comentar algo del código, escríbeme. Respondo en
-          menos de 24 horas.
+        <h2 class="section-title">Hablemos</h2>
+      </div>
+      <p class="section-note">
+        Cuéntame el proyecto o la vacante. Te respondo en menos de 48 h.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p>Si prefieres el email directo:</p>
+        <a href={`mailto:${site.email}`} class="contact-email">{site.email}</a>
+        <p class="contact-note">
+          También estoy en <a href={site.linkedin}>LinkedIn</a> y
+          <a href={site.github}>GitHub</a>.
         </p>
-
-        <a class="email-link" href={`mailto:${site.email}`}>
-          {site.email}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M7 17 17 7M9 7h8v8"></path>
-          </svg>
-        </a>
-
-        <ul class="social-row">
-          <li><a href={site.github} target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
-          <li><a href={site.cvPdf} download>CV en PDF</a></li>
-        </ul>
       </div>
 
-      {hasForm ? (
+      {site.web3formsKey ? (
         <form
-          class="form"
           id="contact-form"
           action="https://api.web3forms.com/submit"
           method="POST"
+          class="contact-form"
+          novalidate
         >
           <input type="hidden" name="access_key" value={site.web3formsKey} />
-          <input type="hidden" name="subject" value="Nuevo mensaje desde el portfolio" />
-          <input type="hidden" name="from_name" value="Portfolio de Sergi Pérez Marí" />
+          <input type="hidden" name="subject" value="Nuevo mensaje desde el portafolio" />
+          <input type="hidden" name="from_name" value="Portfolio Sergi Pérez" />
           <input
             type="checkbox"
             name="botcheck"
-            class="honeypot"
+            style="display:none"
             tabindex="-1"
             autocomplete="off"
-            aria-hidden="true"
           />
 
-          <div class="field">
-            <label for="cf-name">Nombre</label>
-            <input id="cf-name" name="name" type="text" required autocomplete="name" />
-          </div>
-          <div class="field">
-            <label for="cf-email">Email</label>
-            <input id="cf-email" name="email" type="email" required autocomplete="email" />
-          </div>
-          <div class="field">
-            <label for="cf-message">Mensaje</label>
-            <textarea id="cf-message" name="message" required></textarea>
-          </div>
+          <label>
+            <span>Nombre</span>
+            <input type="text" name="name" required autocomplete="name" />
+          </label>
 
-          <button class="btn btn-primary" type="submit">Enviar mensaje</button>
-          <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" required autocomplete="email" />
+          </label>
+
+          <label>
+            <span>Mensaje</span>
+            <textarea name="message" required rows="5" autocomplete="off"></textarea>
+          </label>
+
+          <button type="submit" class="btn">Enviar mensaje</button>
+
+          <p id="form-status" role="status" aria-live="polite" class="form-status"></p>
         </form>
       ) : (
-        <div class="form" style="align-content:start">
-          <p class="mono" style="color:var(--fg-faint)">Directo, sin formularios</p>
-          <p style="margin:0;color:var(--fg-muted);font-size:.95rem">
-            Un email con el asunto claro llega antes que cualquier formulario. Si
-            prefieres, también puedes escribirme por LinkedIn.
-          </p>
-          <a class="btn btn-primary" href={`mailto:${site.email}`} style="justify-content:center">
-            {site.email}
-          </a>
-          <a class="btn btn-ghost" href={site.linkedin} target="_blank" rel="noopener" style="justify-content:center">
-            Mensaje por LinkedIn ↗
-          </a>
-          <p class="mono" style="color:var(--fg-faint);margin:0">
-            Respuesta en menos de 24 h
-          </p>
-        </div>
+        <p class="contact-note">
+          El formulario está desactivado temporalmente. Escríbeme al email de arriba.
+        </p>
       )}
     </div>
   </div>
 </section>
 
-<script is:inline>
-  (() => {
-    const form = document.getElementById('contact-form');
-    if (!form) return;
-    const status = document.getElementById('cf-status');
-    const button = form.querySelector('button[type="submit"]');
+<script>
+  const form = document.querySelector<HTMLFormElement>('#contact-form');
+  const status = document.querySelector<HTMLParagraphElement>('#form-status');
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      if (!status || !button) return;
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!status) return;
 
-      status.dataset.state = '';
-      status.textContent = 'Enviando…';
-      button.disabled = true;
+    const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    status.textContent = 'Enviando…';
+    status.className = 'form-status';
 
-      try {
-        const response = await fetch(form.action, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { Accept: 'application/json' },
-        });
-        const result = await response.json();
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: new FormData(form),
+      });
+      const json = await res.json();
 
-        if (response.ok && result.success) {
-          form.reset();
-          status.dataset.state = 'ok';
-          status.textContent = 'Mensaje enviado. Te respondo en menos de 24 horas.';
-        } else {
-          status.dataset.state = 'error';
-          status.textContent = result.message || 'No se pudo enviar. Prueba con el email directo.';
-        }
-      } catch {
-        status.dataset.state = 'error';
-        status.textContent = 'Fallo de red. Prueba con el email directo.';
-      } finally {
-        button.disabled = false;
+      if (json.success) {
+        form.reset();
+        status.textContent = 'Mensaje enviado. Te respondo en menos de 48 h.';
+        status.classList.add('is-success');
+      } else {
+        status.textContent =
+          'Algo ha fallado. Escríbeme directamente al email de la izquierda.';
+        status.classList.add('is-error');
       }
-    });
-  })();
+    } catch {
+      status.textContent =
+        'Error de red. Revisa tu conexión o escríbeme por email.';
+      status.classList.add('is-error');
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
 </script>
+
+<style>
+  .contact-grid { display: grid; gap: 2rem; }
+  @media (min-width: 768px) {
+    .contact-grid { grid-template-columns: 1fr 1.5fr; }
+  }
+  .contact-email { font-weight: 600; word-break: break-all; }
+  .contact-form { display: grid; gap: 1rem; }
+  .contact-form label { display: grid; gap: 0.35rem; font-size: 0.9rem; }
+  .contact-form input,
+  .contact-form textarea {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border, #ccc);
+    border-radius: 6px;
+    font: inherit;
+    background: var(--bg, #fff);
+    color: inherit;
+  }
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: 2px solid var(--accent, #4f46e5);
+    outline-offset: 1px;
+  }
+  .contact-form button[disabled] { opacity: 0.6; cursor: wait; }
+  .form-status { min-height: 1.2em; font-size: 0.9rem; }
+  .form-status.is-success { color: #16a34a; }
+  .form-status.is-error { color: #dc2626; }
+</style>

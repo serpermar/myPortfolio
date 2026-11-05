@@ -25,7 +25,7 @@ export const site = {
       'Formación continua y proyectos propios mientras busco el siguiente equipo donde seguir creciendo.',
   },
   /** Deja esto vacío para ocultar el formulario y dejar solo el email directo. */
-  web3formsKey: '',
+  web3formsKey: 'dd600e8e-53cf-4e8e-b743-22d374492e7e',
 
   intro:
     'Desarrollador full stack con experiencia en React, .NET Core y SQL. He construido APIs, integrado sistemas industriales y desplegado servicios con Docker sobre Linux. Me interesa entender el problema antes de elegir la herramienta.',
