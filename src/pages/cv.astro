@@ -73,7 +73,7 @@ import { site } from '../data/site';
           </article>
           {site.experience.map((job) => (
             <article class="cv-item">
-              <h3>{job.role} · {job.company}</h3>
+              <h3>{job.role} <span class="cv-sep" aria-hidden="true">·</span> {job.company}</h3>
               <p class="cv-meta">{job.from} — {job.to} · {job.location}</p>
               {job.bullets.length > 0 ? (
                 <ul class="cv-bullets">

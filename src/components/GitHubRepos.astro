@@ -1,0 +1,161 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+import { getGitHubRepos, GITHUB_USERNAME } from '../data/github';
+import { site } from '../data/site';
+
+const repos = await getGitHubRepos();
+
+/**
+ * Capturas opcionales. Deja un fichero en src/assets/projects/github/ con el
+ * nombre exacto del repo (sin extensión): controlGastos.png, Tron.jpg…
+ * Si no hay captura, se usa la imagen social que genera GitHub.
+ */
+const localCovers = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/projects/github/*.{png,jpg,jpeg,webp,avif}',
+  { eager: true },
+);
+
+const coversByName = new Map(
+  Object.entries(localCovers).map(([path, module]) => [
+    path.split('/').pop()!.replace(/\.[^.]+$/, '').toLowerCase(),
+    module.default,
+  ]),
+);
+
+const monthFormatter = new Intl.DateTimeFormat('es-ES', {
+  month: 'short',
+  year: 'numeric',
+});
+
+function formatMonth(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  return monthFormatter.format(date);
+}
+---
+
+{
+  repos.length > 0 && (
+    <section id="github" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Código abierto</p>
+            <h2 class="section-title">Repositorios en GitHub</h2>
+          </div>
+          <p class="section-note">
+            Proyectos que mantengo en abierto. El listado se lee de la API de
+            GitHub en cada compilación; las capturas se pueden personalizar
+            dejando una imagen con el nombre del repositorio.
+          </p>
+        </div>
+
+        <ul class="repo-grid">
+          {repos.map((repo) => {
+            const cover = coversByName.get(repo.name.toLowerCase());
+            const summary =
+              repo.description ??
+              `Repositorio público de ${repo.language ?? 'código'} en GitHub.`;
+
+            return (
+              <li class="repo-item">
+                <article class="card reveal">
+                  <a
+                    class="card-media repo-card-media"
+                    href={repo.url}
+                    target="_blank"
+                    rel="noopener"
+                    tabindex="-1"
+                    aria-hidden="true"
+                  >
+                    <span class="repo-cover-fallback">{repo.displayName}</span>
+                    {cover ? (
+                      <Image
+                        src={cover}
+                        alt=""
+                        widths={[480, 960]}
+                        sizes="(max-width: 760px) 100vw, (max-width: 960px) 50vw, 33vw"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <img
+                        src={`https://opengraph.githubassets.com/1/${GITHUB_USERNAME}/${encodeURIComponent(repo.name)}`}
+                        alt=""
+                        width="1200"
+                        height="630"
+                        loading="lazy"
+                        decoding="async"
+                        referrerpolicy="no-referrer"
+                        onerror="this.style.opacity = '0'"
+                      />
+                    )}
+                    <span class="card-badge">GitHub</span>
+                  </a>
+
+                  <div class="card-body">
+                    <div class="card-top">
+                      <h3 class="card-title">
+                        <a href={repo.url} target="_blank" rel="noopener">
+                          {repo.displayName}
+                        </a>
+                      </h3>
+                      <span class="card-year">{formatMonth(repo.pushedAt)}</span>
+                    </div>
+
+                    <p class="card-summary">{summary}</p>
+
+                    <ul class="tags">
+                      {repo.language && <li>{repo.language}</li>}
+                      {repo.topics.map((topic) => (
+                        <li>{topic}</li>
+                      ))}
+                      {repo.stars > 0 && <li>★ {repo.stars}</li>}
+                    </ul>
+
+                    <div class="card-links">
+                      <a href={repo.url} target="_blank" rel="noopener">
+                        Código ↗
+                      </a>
+                      {repo.homepage && (
+                        <a href={repo.homepage} target="_blank" rel="noopener">
+                          Demo ↗
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div class="cv-actions">
+          <a
+            class="btn btn-ghost"
+            href={`${site.github}?tab=repositories`}
+            target="_blank"
+            rel="noopener"
+          >
+            Ver todos los repositorios en GitHub
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M7 17 17 7M9 7h8v8" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}

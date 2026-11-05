@@ -4,6 +4,7 @@ import { getImage } from 'astro:assets';
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectsExplorer from '../../components/ProjectsExplorer.tsx';
+import GitHubRepos from '../../components/GitHubRepos.astro';
 import type { ProjectItem } from '../../components/ProjectsExplorer.tsx';
 
 const projects = await getCollection('projects');
@@ -54,4 +55,6 @@ const items: ProjectItem[] = await Promise.all(
       <ProjectsExplorer client:load projects={items} />
     </div>
   </section>
+
+  <GitHubRepos />
 </BaseLayout>

@@ -1,4 +1,16 @@
 /* ==========================================================================
+   Tipografía
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Star Jedi';
+  src: url('../assets/fonts/starjedi.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
    Tokens
    ========================================================================== */
 
@@ -17,7 +29,7 @@
   --accent-soft: #fbe9e2;
 
   --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-display: 'Star Jedi', var(--font-sans);
   --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Code', Menlo, Consolas, monospace;
 
   --radius: 14px;
@@ -105,10 +117,11 @@ h1,
 h2,
 h3,
 h4 {
-  font-weight: 500;
-  line-height: 1.1;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.15;
   text-wrap: balance;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.06em;
 }
 
 p {
@@ -153,10 +166,11 @@ p {
 }
 
 .serif {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--font-display);
+  font-style: normal;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.07em;
+  color: var(--accent);
 }
 
 .mono {
@@ -223,15 +237,21 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.82rem;
+  font-weight: 400;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.brand-subtitle {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  letter-spacing: 0.06em;
 }
 
 .brand-dot {
@@ -257,7 +277,10 @@ p {
 }
 
 .nav-list a {
-  font-size: 0.9rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   color: var(--fg-muted);
   text-decoration: none;
   transition: color var(--transition);
@@ -340,7 +363,10 @@ p {
   display: block;
   padding: 0.55rem 0.75rem;
   border-radius: var(--radius-sm);
-  font-size: 0.925rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   color: var(--fg-muted);
   text-decoration: none;
 }
@@ -361,8 +387,10 @@ p {
   padding: 0.72rem 1.25rem;
   border-radius: 999px;
   border: 1px solid transparent;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   text-decoration: none;
   cursor: pointer;
   transition: transform var(--transition), background-color var(--transition),
@@ -395,14 +423,23 @@ p {
 
 .btn-sm {
   padding: 0.45rem 0.85rem;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
+}
+
+.btn[href^='mailto:'] {
+  font-family: var(--font-sans);
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .link-arrow {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.875rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
   color: var(--fg);
   text-decoration: none;
   border-bottom: 1px solid var(--line-strong);
@@ -432,10 +469,10 @@ p {
 }
 
 .hero h1 {
-  font-size: clamp(2.75rem, 7.5vw, 5.25rem);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-  font-weight: 450;
+  font-size: clamp(2.1rem, 5.4vw, 3.9rem);
+  line-height: 1.06;
+  letter-spacing: 0.06em;
+  font-weight: 400;
 }
 
 .hero h1 .serif {
@@ -635,8 +672,8 @@ p {
 }
 
 .card-title {
-  font-size: 1.35rem;
-  letter-spacing: -0.015em;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
 }
 
 .card-title a {
@@ -704,6 +741,55 @@ p {
 .card-links .is-disabled {
   color: var(--fg-faint);
   border-color: transparent;
+}
+
+/* Repositorios de GitHub */
+
+.repo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem) 1.25rem;
+  list-style: none;
+  padding: 0;
+}
+
+.repo-item {
+  min-width: 0;
+}
+
+.repo-grid .card-title {
+  font-size: 1.15rem;
+}
+
+.repo-card-media img {
+  position: relative;
+  z-index: 1;
+}
+
+.repo-cover-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      transparent 62%
+    ),
+    var(--bg-elev);
+}
+
+.repo-grid .card-badge {
+  z-index: 2;
 }
 
 /* ==========================================================================
@@ -819,7 +905,7 @@ p {
 
 .contact-title {
   font-size: clamp(2.2rem, 5.5vw, 3.75rem);
-  line-height: 1.02;
+  line-height: 1.08;
 }
 
 .contact-lead {
@@ -1200,7 +1286,7 @@ p {
 
 .cv-name {
   font-size: clamp(2rem, 5vw, 3rem);
-  letter-spacing: -0.03em;
+  letter-spacing: 0.06em;
 }
 
 .cv-role {
@@ -1242,7 +1328,7 @@ p {
 .cv-block h2 {
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--fg-faint);
@@ -1256,8 +1342,13 @@ p {
 }
 
 .cv-item h3 {
-  font-size: 1.02rem;
-  font-weight: 500;
+  font-size: 1.08rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+
+.cv-sep {
+  font-family: var(--font-sans);
 }
 
 .cv-item .cv-meta {
@@ -1366,6 +1457,18 @@ p {
    ========================================================================== */
 
 @media (max-width: 960px) {
+  .site-header .container {
+    gap: 1rem;
+  }
+
+  .header-right {
+    gap: 1rem;
+  }
+
+  .nav-list {
+    gap: 1rem;
+  }
+
   .hero {
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -1390,8 +1493,16 @@ p {
     aspect-ratio: 1 / 1;
   }
 
+  .brand-subtitle {
+    display: none;
+  }
+
   .cv-grid {
     grid-template-columns: 1fr;
+  }
+
+  .repo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1408,11 +1519,11 @@ p {
     gap: 0.6rem;
   }
 
-  .brand-subtitle {
-    display: none;
+  .project-grid {
+    grid-template-columns: 1fr;
   }
 
-  .project-grid {
+  .repo-grid {
     grid-template-columns: 1fr;
   }
 

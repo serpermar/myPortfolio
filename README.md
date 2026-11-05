@@ -20,10 +20,12 @@ src/
 ├─ content/
 │  └─ projects/          ← un .md por proyecto (esto es el "CMS")
 ├─ data/site.ts          ← datos personales, experiencia, formación, stack
+├─ data/github.ts        ← repos públicos de GitHub (API + copia de respaldo)
 ├─ layouts/BaseLayout.astro
 ├─ components/
 │  ├─ Header.astro  Hero.astro  ProjectCard.astro
 │  ├─ Experience.astro  About.astro  Contact.astro
+│  ├─ GitHubRepos.astro      ← listado automático de repositorios
 │  └─ ProjectsExplorer.tsx   ← isla React (filtro + búsqueda)
 ├─ pages/
 │  ├─ index.astro
@@ -47,6 +49,38 @@ así no se publica un proyecto a medias.
 - `featured: true` → aparece en la home (máximo 3, ordenados por `order`).
 - `order` → posición en el listado y en el paginador anterior/siguiente.
 - Sin `repo` ni `demo`, la tarjeta muestra "Sin enlace público".
+
+## Repositorios de GitHub
+
+La página `/proyectos` incluye debajo una sección que se genera sola con los
+repositorios públicos de `serpermar`, excluyendo `myPortfolio`. Se leen de la API
+de GitHub en cada build (`src/data/github.ts`), así que no hay que actualizarla a
+mano: al hacer push de un repo nuevo, aparece en el siguiente despliegue.
+
+- Si la API no responde (sin red o rate limit), se usa la copia local `FALLBACK`
+  del mismo fichero. El build nunca se rompe por GitHub.
+- Para evitar el límite de 60 peticiones/hora, define `GITHUB_TOKEN` en el
+  entorno del build (Vercel/Netlify) o en un `.env` local. Es opcional.
+- Los nombres se pueden retocar en `DISPLAY_NAMES` y los repos a ocultar en
+  `EXCLUDED`, ambos en `src/data/github.ts`.
+
+### Portadas de los repos
+
+Cada tarjeta usa la misma estructura que las fichas de proyecto (portada 16:10,
+título, resumen, tags y enlaces). Por defecto la portada es la imagen social que
+GitHub genera para el repositorio.
+
+Para usar una captura propia, deja el fichero en `src/assets/projects/github/`
+con el nombre exacto del repo y sin extensión en el nombre base:
+
+```
+src/assets/projects/github/controlGastos.png
+src/assets/projects/github/Footprint-Mappa.webp
+```
+
+Se detecta automáticamente, sin importar nada. Formatos: `.png`, `.jpg`,
+`.jpeg`, `.webp`, `.avif`. Si la imagen social de GitHub falla, la tarjeta
+mantiene un fondo con el nombre del repo como respaldo.
 
 ## Desplegar
 
@@ -74,6 +108,27 @@ dominio no es `sergipm.dev`.
 - **Movimiento reducido** respetado (`prefers-reduced-motion`).
 - Las animaciones de scroll usan `animation-timeline: view()`: donde no existe,
   simplemente no hay animación.
+
+## Tipografía
+
+- **Texto y párrafos:** Inter Variable.
+- **Títulos, navegación, botones y enlaces destacados:** **Star Jedi** de
+  [Boba Fonts](https://www.dafont.com/star-jedi.font), la fuente fan que imita el
+  logo de Star Wars. El archivo `src/assets/fonts/starjedi.woff2` es una
+  conversión del TTF original.
+- **Metadatos y etiquetas:** mono del sistema.
+
+> **Licencia:** Star Jedi es de uso **personal**. No está permitido su uso
+> comercial sin permiso del autor. Si el portfolio pasa a tener fines
+> comerciales, sustitúyela por una alternativa libre como Orbitron.
+
+Para cambiar la fuente de títulos, edita `--font-display` y el `@font-face` en
+`src/styles/global.css`. El texto de los párrafos sigue siempre en Inter.
+
+Star Jedi tiene dos alfabetos a la misma altura: las mayúsculas decorativas del
+logo se pisan entre sí y las minúsculas son las formas limpias. Por eso los
+títulos **no** usan `text-transform: uppercase` y llevan `letter-spacing: 0.06em`.
+No vuelvas a forzar mayúsculas en elementos con `var(--font-display)`.
 
 ## Regenerar la imagen social
 
