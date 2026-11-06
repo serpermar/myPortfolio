@@ -7,7 +7,7 @@ context: "Personal"
 stack: ["React", "Node.js", "Express", "MySQL", "JWT"]
 demo: "https://communityhub-demo.vercel.app"
 repo: "https://github.com/serpermar/communityHub"
-cover: "cover.webp"
+cover: "/screenshots/communityhub.webp"
 gallery:
   - src: "/images/proyectos/communityhub/feed.webp"
     alt: "Feed principal de la comunidad"

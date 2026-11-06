@@ -7,7 +7,7 @@ context: "Personal"
 stack: ["React", "Vite", "CSS Modules"]
 demo: "https://guessverse.vercel.app"
 repo: "https://github.com/serpermar/guessVerse"
-cover: "cover.webp"
+cover: "/screenshots/guessverse.webp"
 featured: true
 order: 3
 highlights:

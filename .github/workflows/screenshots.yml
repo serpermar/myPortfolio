@@ -1,0 +1,52 @@
+name: Generate Screenshots
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # Cada lunes a las 3:00 UTC
+  workflow_dispatch: # Permite lanzarlo a mano desde la pestaña Actions
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build Astro
+        run: npm run build
+
+      - name: Start preview server
+        run: npx astro preview &
+      
+      - name: Wait for server
+        run: npx wait-on http://localhost:4321 --timeout 60000
+
+      - name: Capture portfolio screenshots
+        run: npx portfolio-shot generate
+
+      - name: Capture external project screenshots
+        run: node scripts/screenshots.mjs
+
+      - name: Commit screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/screenshots
+          if git diff --cached --quiet; then
+            echo "Sin cambios en las capturas."
+          else
+            git commit -m "chore: update project screenshots"
+            git push
+          fi

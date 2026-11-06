@@ -7,7 +7,7 @@ context: "Personal"
 stack: ["JavaScript", "HTML5", "CSS", "Fetch API"]
 demo: "https://apigame.vercel.app"
 repo: "https://github.com/serpermar/ApiGame"
-cover: "cover.webp"
+cover: "/screenshots/apigame.webp"
 featured: true
 order: 2
 highlights:
