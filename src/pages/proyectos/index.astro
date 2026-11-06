@@ -1,60 +1,85 @@
 ---
 import { getCollection } from 'astro:content';
-import { getImage } from 'astro:assets';
-
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProjectsExplorer from '../../components/ProjectsExplorer.tsx';
-import GitHubRepos from '../../components/GitHubRepos.astro';
-import type { ProjectItem } from '../../components/ProjectsExplorer.tsx';
+import ProjectCard from '../../components/ProjectCard.astro';
 
-const projects = await getCollection('projects');
+const projects = await getCollection('projects', ({ data }) => !data.draft);
+const sorted = projects.sort((a, b) => a.data.order - b.data.order);
 
-const items: ProjectItem[] = await Promise.all(
-  projects
-    .sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order)
-    .map(async (project) => {
-      const cover = await getImage({
-        src: project.data.cover,
-        width: 960,
-        format: 'webp',
-      });
+const total = sorted.length;
+const title = 'Proyectos · Sergi Pérez';
 
-      return {
-        id: project.id,
-        title: project.data.title,
-        summary: project.data.summary,
-        year: project.data.year,
-        role: project.data.role,
-        context: project.data.context,
-        stack: [...project.data.stack],
-        cover: cover.src,
-        demo: project.data.demo,
-        repo: project.data.repo,
-      };
-    }),
-);
+const description =
+  total === 0
+    ? 'Proyectos de Sergi Pérez: casos de estudio con el problema, las decisiones técnicas y el resultado.'
+    : total === 1
+      ? `Proyecto destacado de Sergi Pérez: ${sorted[0].data.title}.`
+      : `Los ${total} proyectos que forman mi portafolio: ${sorted
+          .slice(0, 3)
+          .map((p) => p.data.title)
+          .join(', ')}.`;
 ---
 
-<BaseLayout
-  title="Proyectos"
-  description="Todos los proyectos de Sergi Pérez Marí: aplicaciones full stack, frontend y herramientas. Con stack, contexto, código y demos."
->
-  <section class="section" style="border-top:0">
+<BaseLayout title={title} description={description}>
+  <section class="section">
     <div class="container">
+      <a href="/" class="back-link">← Volver al inicio</a>
+
       <div class="section-head">
         <div>
-          <p class="eyebrow">Archivo</p>
-          <h2 class="section-title">Todos los proyectos</h2>
+          <p class="eyebrow">Trabajo seleccionado</p>
+          <h1 class="section-title">Proyectos</h1>
         </div>
         <p class="section-note">
-          Filtra por contexto o busca por tecnología. Cada proyecto tiene su ficha
-          con el detalle técnico.
+          {total === 1
+            ? 'Un proyecto donde cuento el problema, las decisiones técnicas y el resultado.'
+            : `${total} proyectos donde cuento el problema, las decisiones técnicas y el resultado. Cada ficha es un caso de estudio, no una captura.`}
         </p>
       </div>
 
-      <ProjectsExplorer client:load projects={items} />
+      {sorted.length === 0 ? (
+        <p class="empty-state">
+          Aún no hay proyectos publicados. Vuelve pronto.
+        </p>
+      ) : (
+        <div class="project-grid">
+          {sorted.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      )}
+
+      <div class="cv-actions" style="margin-top:3rem">
+        <a class="btn btn-ghost" href="/#contacto">
+          ¿Hablamos?
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6"></path>
+          </svg>
+        </a>
+      </div>
     </div>
   </section>
-
-  <GitHubRepos />
 </BaseLayout>
+
+<style>
+  .back-link {
+    display: inline-block;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    color: var(--fg-muted, #666);
+    text-decoration: none;
+  }
+  .back-link:hover {
+    color: var(--fg, #111);
+  }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    margin: 0.25rem 0 0;
+  }
+  .empty-state {
+    padding: 3rem 0;
+    color: var(--fg-muted, #666);
+    text-align: center;
+  }
+</style>

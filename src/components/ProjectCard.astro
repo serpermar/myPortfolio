@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -11,6 +12,16 @@ const { project, wide = false } = Astro.props;
 const { title, summary, year, context, stack, repo, demo, cover } = project.data;
 const href = `/proyectos/${project.id}`;
 
+// Glob sobre tu carpeta real
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/projects/**/*.{webp,jpg,jpeg,png,avif}',
+  { eager: true }
+);
+
+const coverImage = cover
+  ? images[`/src/assets/projects/${project.id}/${cover}`]?.default
+  : undefined;
+
 const widths = wide ? [720, 1120, 1440] : [480, 960];
 const sizes = wide
   ? '(max-width: 1120px) 100vw, 1120px'
@@ -19,14 +30,18 @@ const sizes = wide
 
 <article class="card reveal">
   <a class="card-media" href={href} tabindex="-1" aria-hidden="true">
-    <Image
-      src={cover}
-      alt=""
-      widths={widths}
-      sizes={sizes}
-      loading="lazy"
-      decoding="async"
-    />
+    {coverImage ? (
+      <Image
+        src={coverImage}
+        alt=""
+        widths={widths}
+        sizes={sizes}
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class="card-media-placeholder" aria-hidden="true"></div>
+    )}
     <span class="card-badge">{context}</span>
   </a>
 
@@ -46,15 +61,20 @@ const sizes = wide
 
     <div class="card-links">
       <a href={href}>Caso →</a>
-      {demo && (
-        <a href={demo} target="_blank" rel="noopener">Demo ↗</a>
-      )}
-      {repo && (
-        <a href={repo} target="_blank" rel="noopener">Código ↗</a>
-      )}
+      {demo && <a href={demo} target="_blank" rel="noopener">Demo ↗</a>}
+      {repo && <a href={repo} target="_blank" rel="noopener">Código ↗</a>}
       {!demo && !repo && (
         <span class="is-disabled" title="Aún sin enlace público">Sin enlace público</span>
       )}
     </div>
   </div>
 </article>
+
+<style>
+  .card-media-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-subtle, #eee);
+    border-radius: 6px;
+  }
+</style>
